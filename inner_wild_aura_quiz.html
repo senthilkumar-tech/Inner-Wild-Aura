@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0a0015; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+  /* Particles */
+  #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .particle { position: absolute; border-radius: 50%; animation: float linear infinite; opacity: 0; }
+  @keyframes float { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.6; } 100% { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
+
+  .page { position: relative; z-index: 1; min-height: 100vh; }
+
+  /* LANDING */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; background: radial-gradient(ellipse at 20% 50%, #1a0038 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, #001a3a 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, #0d2200 0%, transparent 50%); }
+  .logo-ring { width: 130px; height: 130px; border-radius: 50%; background: conic-gradient(#ff6b00, #ff0080, #8b00ff, #00d4ff, #00ff88, #ffff00, #ff6b00); padding: 3px; animation: spin 8s linear infinite; margin-bottom: 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .logo-inner { width: 100%; height: 100%; border-radius: 50%; background: #0a0015; display: flex; align-items: center; justify-content: center; font-size: 52px; }
+  .brand { font-size: 28px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, #ff6b00, #ff0080, #8b00ff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .tm { font-size: 12px; -webkit-text-fill-color: #aaa; background: none; vertical-align: super; }
+  .tagline { font-size: 15px; color: #ccc; margin: 8px 0 24px; letter-spacing: 1px; }
+  .cta-btn { background: linear-gradient(135deg, #ff6b00, #ff0080, #8b00ff); border: none; color: #fff; font-size: 18px; font-weight: 700; padding: 16px 40px; border-radius: 50px; cursor: pointer; letter-spacing: 1px; box-shadow: 0 0 40px rgba(255, 0, 128, 0.5); animation: pulse-glow 2s ease-in-out infinite; transition: transform 0.2s; }
+  .cta-btn:hover { transform: scale(1.05); }
+  @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 40px rgba(255, 0, 128, 0.5); } 50% { box-shadow: 0 0 70px rgba(255, 0, 128, 0.9), 0 0 100px rgba(139, 0, 255, 0.4); } }
+
+  /* Animal carousel */
+  .carousel-wrap { width: 100%; overflow: hidden; margin: 30px 0; }
+  .carousel { display: flex; gap: 12px; animation: scroll-carousel 20s linear infinite; width: max-content; }
+  .animal-chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50px; padding: 8px 16px; font-size: 13px; white-space: nowrap; color: #fff; display: flex; align-items: center; gap: 6px; }
+  @keyframes scroll-carousel { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* Stats */
+  .stats { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #00d4ff, #00ff88); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { font-size: 11px; color: #888; }
+
+  /* QUIZ */
+  .quiz-page { min-height: 100vh; padding: 20px; background: radial-gradient(ellipse at 30% 0%, #1a0038 0%, transparent 60%), radial-gradient(ellipse at 70% 100%, #001a3a 0%, transparent 50%); }
+  .quiz-header { text-align: center; padding: 20px 0 10px; }
+  .quiz-title { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b00, #ff0080); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .progress-wrap { background: rgba(255,255,255,0.1); border-radius: 50px; height: 8px; margin: 16px 0; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #ff6b00, #ff0080, #8b00ff); border-radius: 50px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+  .progress-text { font-size: 13px; color: #aaa; text-align: center; margin-bottom: 16px; }
+
+  .q-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 20px; padding: 24px 20px; margin-bottom: 16px; animation: slide-in 0.4s ease; }
+  @keyframes slide-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+  .q-num { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .q-emoji { font-size: 32px; margin-bottom: 10px; }
+  .q-text { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.5; margin-bottom: 20px; }
+  .option { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; font-size: 14px; color: #ddd; transition: all 0.25s; display: flex; align-items: center; gap: 12px; }
+  .option:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,100,200,0.4); transform: translateX(4px); }
+  .option.selected { background: linear-gradient(135deg, rgba(255,107,0,0.25), rgba(255,0,128,0.25)); border-color: #ff0080; color: #fff; }
+  .option-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .next-btn { width: 100%; background: linear-gradient(135deg, #ff6b00, #ff0080); border: none; color: #fff; font-size: 16px; font-weight: 700; padding: 14px; border-radius: 14px; cursor: pointer; margin-top: 8px; transition: all 0.2s; display: none; }
+  .next-btn.show { display: block; }
+  .next-btn:hover { transform: scale(1.02); box-shadow: 0 6px 30px rgba(255, 0, 128, 0.4); }
+
+  /* LOADING */
+  .loading-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+  .dna-loader { width: 80px; height: 80px; margin: 0 auto 24px; }
+  .loader-ring { width: 80px; height: 80px; border-radius: 50%; border: 3px solid transparent; border-top-color: #ff6b00; border-right-color: #ff0080; border-bottom-color: #8b00ff; border-left-color: #00d4ff; animation: spin 1.2s linear infinite; }
+  .loading-text { font-size: 18px; font-weight: 600; color: #ccc; margin-bottom: 8px; }
+  .loading-sub { font-size: 13px; color: #666; }
+  .loading-animals { font-size: 40px; margin: 20px; letter-spacing: 8px; animation: bounce-animals 0.8s ease-in-out infinite alternate; }
+  @keyframes bounce-animals { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+
+  /* RESULTS */
+  .results-page { min-height: 100vh; padding: 20px; background: radial-gradient(ellipse at 50% 0%, #1a0038 0%, transparent 70%); }
+  .result-card { background: linear-gradient(135deg, rgba(20,0,50,0.9), rgba(0,10,40,0.9)); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(20px); border-radius: 24px; padding: 28px 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; animation: reveal 0.8s ease; }
+  @keyframes reveal { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ff6b00, #ff0080, #8b00ff, #00d4ff, #00ff88); }
+  .spirit-emoji { font-size: 80px; margin: 10px 0; animation: float-anim 3s ease-in-out infinite; display: block; }
+  @keyframes float-anim { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+  .result-label { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: #888; margin-bottom: 4px; }
+  .result-name { font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #ff6b00, #ff0080, #8b00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+  .match-badge { display: inline-block; background: linear-gradient(135deg, #00ff88, #00d4ff); color: #000; font-size: 13px; font-weight: 800; padding: 6px 16px; border-radius: 50px; margin: 10px 0; }
+  .result-desc { font-size: 14px; color: #ccc; line-height: 1.7; margin: 16px 0; text-align: left; }
+
+  /* Trait bars */
+  .traits-section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+  .section-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .trait-row { margin-bottom: 12px; }
+  .trait-header { display: flex; justify-content: space-between; font-size: 12px; color: #aaa; margin-bottom: 4px; }
+  .trait-bar-bg { background: rgba(255,255,255,0.08); border-radius: 50px; height: 8px; overflow: hidden; }
+  .trait-bar { height: 100%; border-radius: 50px; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); width: 0; }
+
+  /* Info cards */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .info-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 12px; }
+  .info-card-title { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .info-card-content { font-size: 13px; color: #ccc; line-height: 1.5; }
+  .strength-tag { display: inline-block; background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3); color: #00ff88; font-size: 11px; padding: 3px 10px; border-radius: 50px; margin: 2px; }
+  .weak-tag { display: inline-block; background: rgba(255,0,128,0.15); border: 1px solid rgba(255,0,128,0.3); color: #ff6b9d; font-size: 11px; padding: 3px 10px; border-radius: 50px; margin: 2px; }
+
+  /* Share */
+  .share-section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+  .share-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
+  .share-btn:hover { background: rgba(255,255,255,0.1); transform: translateX(4px); }
+  .share-btn .s-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .retake-btn { width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #ccc; font-size: 15px; font-weight: 600; padding: 14px; border-radius: 14px; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
+  .retake-btn:hover { background: rgba(255,255,255,0.08); }
+
+  /* Rare badge */
+  .rare-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; margin-bottom: 10px; }
+
+  /* Daily wisdom */
+  .wisdom-card { background: linear-gradient(135deg, rgba(139,0,255,0.2), rgba(0,212,255,0.2)); border: 1px solid rgba(139,0,255,0.3); border-radius: 16px; padding: 18px; margin-bottom: 14px; text-align: center; }
+  .wisdom-icon { font-size: 28px; margin-bottom: 8px; }
+  .wisdom-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #8b00ff; margin-bottom: 8px; }
+  .wisdom-text { font-size: 14px; color: #ddd; font-style: italic; line-height: 1.6; }
+
+  /* Compatibility teaser */
+  .compat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.2s; }
+  .compat-card:hover { background: rgba(255,255,255,0.08); }
+  .compat-text h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+  .compat-text p { font-size: 12px; color: #888; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: rgba(0,255,136,0.9); color: #000; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 50px; z-index: 1000; transition: transform 0.4s; pointer-events: none; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Fun fact */
+  .fact-ribbon { background: linear-gradient(135deg, rgba(255,107,0,0.2), rgba(255,0,128,0.2)); border-left: 3px solid #ff6b00; border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 13px; color: #ddd; line-height: 1.5; }
+
+  /* Badges */
+  .badges-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .badge { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px 12px; text-align: center; flex: 1; min-width: 80px; }
+  .badge-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+  .badge-name { font-size: 10px; color: #888; }
+  .badge.earned { border-color: rgba(255,215,0,0.4); background: rgba(255,215,0,0.1); }
+  .badge.earned .badge-name { color: #ffd700; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Inner Wild Aura — Personality Quiz to Discover Your Spirit Animal</h2>
+
+<div id="particles"></div>
+<div class="toast" id="toast"></div>
+
+<!-- LANDING PAGE -->
+<div class="page" id="landingPage">
+  <div class="hero">
+    <div class="logo-ring"><div class="logo-inner">🐾</div></div>
+    <div class="brand">Inner Wild Aura<span class="tm">™</span></div>
+    <div class="tagline">Discover the Animal Hidden Within Your Soul</div>
+
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel"></div>
+    </div>
+
+    <button class="cta-btn" onclick="startQuiz()">✨ Start My Journey</button>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">2.4M+</div><div class="stat-label">Souls Discovered</div></div>
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Spirit Animals</div></div>
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">Trait Dimensions</div></div>
+    </div>
+
+    <div class="wisdom-card" style="margin-top:24px;max-width:380px">
+      <div class="wisdom-icon">🌙</div>
+      <div class="wisdom-label">Daily Animal Wisdom</div>
+      <div class="wisdom-text" id="dailyWisdom"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="page hidden" id="quizPage">
+  <div class="quiz-page">
+    <div class="quiz-header">
+      <div class="quiz-title">🐾 Inner Wild Aura™</div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:10%"></div></div>
+      <div class="progress-text" id="progressText">Question 1 of 10</div>
+    </div>
+    <div id="questionContainer"></div>
+  </div>
+</div>
+
+<!-- LOADING PAGE -->
+<div class="page hidden" id="loadingPage">
+  <div class="loading-page">
+    <div class="loader-ring"></div>
+    <div class="loading-animals" id="loadingAnimals">🦁🐺🦊</div>
+    <div class="loading-text">Reading your soul...</div>
+    <div class="loading-sub">Analyzing 10 dimensions of your wild self</div>
+  </div>
+</div>
+
+<!-- RESULTS PAGE -->
+<div class="page hidden" id="resultsPage">
+  <div class="results-page">
+    <div class="result-card" id="resultCard">
+      <div class="rare-badge" id="rareBadge">⭐ RARE SPIRIT ANIMAL</div>
+      <span class="spirit-emoji" id="spiritEmoji">🦁</span>
+      <div class="result-label">Your Spirit Animal Is</div>
+      <div class="result-name" id="spiritName">The Lion</div>
+      <div class="match-badge" id="matchBadge">94% Soul Match</div>
+      <div class="result-desc" id="spiritDesc"></div>
+      <div class="fact-ribbon" id="spiritFact"></div>
+    </div>
+
+    <div class="traits-section">
+      <div class="section-title">⚡ Your Wild Traits</div>
+      <div id="traitsContainer"></div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">💪 Strengths</div>
+        <div class="info-card-content" id="strengthsContent"></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🌀 Shadow Side</div>
+        <div class="info-card-content" id="weaknessContent"></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🤝 Social Style</div>
+        <div class="info-card-content" id="socialContent"></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🔮 Hidden Talent</div>
+        <div class="info-card-content" id="talentContent"></div>
+      </div>
+    </div>
+
+    <div class="badges-row" id="badgesRow"></div>
+
+    <div class="compat-card" onclick="showToast('🔗 Share with friends to unlock Compatibility Mode!')">
+      <div style="font-size:40px">💞</div>
+      <div class="compat-text">
+        <h4>Animal Compatibility</h4>
+        <p>Find your perfect wild match among friends</p>
+      </div>
+      <div style="margin-left:auto;font-size:20px;color:#888">›</div>
+    </div>
+
+    <div class="share-section">
+      <div class="section-title">🌟 Share Your Wild Soul</div>
+      <button class="share-btn" onclick="shareResult('instagram')"><div class="s-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">📷</div> Share to Instagram Story</button>
+      <button class="share-btn" onclick="shareResult('whatsapp')"><div class="s-icon" style="background:#25d366">💬</div> Share on WhatsApp</button>
+      <button class="share-btn" onclick="shareResult('x')"><div class="s-icon" style="background:#000; border:1px solid #333">✖️</div> Share on X (Twitter)</button>
+      <button class="share-btn" onclick="shareResult('facebook')"><div class="s-icon" style="background:#1877f2">👍</div> Share on Facebook</button>
+      <button class="share-btn" onclick="downloadCard()"><div class="s-icon" style="background:linear-gradient(135deg,#8b00ff,#00d4ff)">💾</div> Download Result Card</button>
+    </div>
+
+    <button class="retake-btn" onclick="retakeQuiz()">🔄 Retake Quiz — Explore Another Side</button>
+  </div>
+</div>
+
+<script>
+const ANIMALS = {
+  wolf: { name: 'The Wolf', emoji: '🐺', rare: false, match: 92, traits: { leadership: 85, loyalty: 95, courage: 88, intelligence: 82, creativity: 70, adaptability: 78, empathy: 80, curiosity: 75, social: 90, independence: 72 }, desc: "You are the Wolf — a creature of deep loyalty, fierce protection, and unwavering pack instinct. You lead not through dominance, but through trust and earned respect. Your instincts are razor-sharp, and you read people and situations with eerie accuracy. Wolves are the original social architects — you build meaningful bonds that last lifetimes.", fact: "🐺 Wolves can howl in a choir and each voice is unique — no two wolves howl the same note, just like no two wolves are the same soul.", strengths: ['Fiercely loyal','Natural leader','Street-smart','Protective'], weaknesses: ['Over-protective','Territorial','Stubborn'], social: 'Pack-oriented — you thrive in tight-knit groups, deeply loyal to your chosen family.', talent: 'Reading people and sensing danger before it arrives.' },
+  lion: { name: 'The Lion', emoji: '🦁', rare: false, match: 94, traits: { leadership: 97, loyalty: 85, courage: 96, intelligence: 78, creativity: 72, adaptability: 70, empathy: 75, curiosity: 68, social: 82, independence: 85 }, desc: "You are the Lion — royalty with a beating heart of gold. You carry yourself with quiet authority that commands respect without demanding it. Your courage is legendary, but it's your deep sense of justice that truly sets you apart. Lions don't just rule — they nurture, protect, and inspire those under their care.", fact: "🦁 A lion's roar can be heard up to 8km away — your voice too, carries further than you know.", strengths: ['Commanding presence','Deep courage','Natural protector','Just & fair'], weaknesses: ['Pride','Impatience','Can be domineering'], social: 'Social but selective — you value quality over quantity in your pride.', talent: 'Inspiring others to rise to their full potential.' },
+  fox: { name: 'The Fox', emoji: '🦊', rare: false, match: 89, traits: { leadership: 72, loyalty: 75, courage: 78, intelligence: 95, creativity: 94, adaptability: 92, empathy: 80, curiosity: 96, social: 70, independence: 90 }, desc: "You are the Fox — the most enigmatic, clever, and creative creature in the wild. Your mind runs three steps ahead of everyone else's. You have a magical ability to find solutions where others see only walls. Playful and mysterious, you leave everyone wondering what you'll do next — and that's exactly how you like it.", fact: "🦊 Foxes are one of the few animals that play for the sheer joy of it — even with other species.", strengths: ['Brilliant mind','Creative solver','Adaptable','Mysterious charisma'], weaknesses: ['Too independent','Secretive','Can be mischievous'], social: 'Selective loner — charming in small doses, deeply private by nature.', talent: 'Finding beauty and solutions in unexpected places.' },
+  owl: { name: 'The Owl', emoji: '🦉', rare: false, match: 91, traits: { leadership: 75, loyalty: 80, courage: 72, intelligence: 98, creativity: 85, adaptability: 76, empathy: 85, curiosity: 95, social: 60, independence: 92 }, desc: "You are the Owl — the ancient keeper of wisdom and the eternal observer. While others react, you pause and reflect. Your intellect is your superpower, matched only by your deep wells of empathy. People seek you out in their darkest hours because you always seem to know exactly the right words.", fact: "🦉 Owls can rotate their heads 270 degrees — you too, always see what others miss.", strengths: ['Profound wisdom','Deep empathy','Perceptive','Calm under pressure'], weaknesses: ['Overthinking','Social withdrawal','Analysis paralysis'], social: 'Solitary but deeply caring — few connections but each one profound.', talent: 'Seeing truth beneath layers of noise and distraction.' },
+  eagle: { name: 'The Eagle', emoji: '🦅', rare: false, match: 93, traits: { leadership: 90, loyalty: 82, courage: 94, intelligence: 88, creativity: 78, adaptability: 82, empathy: 70, curiosity: 80, social: 68, independence: 97 }, desc: "You are the Eagle — a sovereign spirit that soars above the noise of the world. Your vision is long-range; while others plan for tomorrow, you strategize for years ahead. You are fiercely independent and don't need validation from anyone. When you set a goal, nothing in heaven or earth stops you from reaching it.", fact: "🦅 Eagles can spot prey from 3km away — your vision, both literal and metaphorical, is extraordinary.", strengths: ['Long-range thinker','Fearless ambition','Laser focus','True independence'], weaknesses: ['Emotional distance','Perfectionism','Difficulty delegating'], social: 'Independent flier — you work alone at your peak, but can lead grand formations.', talent: 'Spotting opportunities that are invisible to everyone else.' },
+  tiger: { name: 'The Tiger', emoji: '🐯', rare: false, match: 90, traits: { leadership: 88, loyalty: 78, courage: 97, intelligence: 82, creativity: 80, adaptability: 85, empathy: 72, curiosity: 82, social: 65, independence: 94 }, desc: "You are the Tiger — the ultimate balance of power and grace. You move through life with feline confidence: silent, deliberate, and absolutely unstoppable when you commit. You don't just pursue your goals — you stalk them with patient precision and then strike with breathtaking speed. Unpredictable, magnetic, and impossible to ignore.", fact: "🐯 Every tiger's stripe pattern is unique — like a fingerprint. Your individuality is your greatest power.", strengths: ['Raw courage','Patient strategist','Magnetic intensity','Self-reliant'], weaknesses: ['Impulsive strikes','Solo warrior','Trust issues'], social: 'Largely solitary — intense one-on-one connections but few of them.', talent: 'Executing perfectly at exactly the right moment.' },
+  dolphin: { name: 'The Dolphin', emoji: '🐬', rare: false, match: 88, traits: { leadership: 78, loyalty: 88, courage: 75, intelligence: 92, creativity: 90, adaptability: 94, empathy: 97, curiosity: 92, social: 98, independence: 55 }, desc: "You are the Dolphin — the most joyful, intelligent, and emotionally connected being in the wild. Your emotional intelligence is off the charts. You sense what others feel before they even speak, and your presence alone has a calming, healing effect. Life to you is play, discovery, and deep connection.", fact: "🐬 Dolphins have unique whistles to identify themselves — like personal names. You make everyone feel known.", strengths: ['Extraordinary empathy','Playful creativity','Social genius','Healer'], weaknesses: ['Too sensitive','People-pleaser','Avoids conflict'], social: 'Ultra social — you are the soul of every group and light of every gathering.', talent: 'Making anyone feel immediately loved and understood.' },
+  elephant: { name: 'The Elephant', emoji: '🐘', rare: false, match: 87, traits: { leadership: 82, loyalty: 97, courage: 85, intelligence: 90, creativity: 72, adaptability: 70, empathy: 96, curiosity: 78, social: 88, independence: 68 }, desc: "You are the Elephant — the great memory-keeper, the ancient protector, and the most loyal soul in the wilderness. You never forget a kindness or a betrayal. Your emotional depth is oceanic. You carry your community's history and pain with grace. People trust you completely because you have never let anyone down.", fact: "🐘 Elephants mourn their dead and revisit bones of lost loved ones. Your loyalty outlasts lifetimes.", strengths: ['Unbreakable loyalty','Deep memory','Community leader','Emotional strength'], weaknesses: ['Slow to change','Holds grudges','Overwhelmed by injustice'], social: 'Herd heart — your community is everything. You are the glue that holds groups together.', talent: 'Holding space for others\' grief and transforming it into wisdom.' },
+  snow_leopard: { name: 'Snow Leopard', emoji: '🐆', rare: true, match: 96, traits: { leadership: 80, loyalty: 78, courage: 92, intelligence: 90, creativity: 95, adaptability: 88, empathy: 76, curiosity: 92, social: 45, independence: 99 }, desc: "You have awakened the rarest spirit — the Snow Leopard, ghost of the mountains. Elusive, breathtakingly beautiful, and almost mythical in nature, very few ever truly see or understand you. You exist in the rarefied air of the highest peaks — mentally, creatively, and spiritually. You are a mystery that the world desperately wants to solve.", fact: "🐆 Snow leopards are so elusive, scientists call them 'ghosts of the mountain.' Your true self is a sacred secret.", strengths: ['Rare genius','Otherworldly creativity','Utterly unique','Mountain-level resilience'], weaknesses: ['Extreme isolation','Misunderstood','Unreachable at times'], social: 'Rare lone wanderer — almost entirely self-contained, rarely seen at full depth.', talent: 'Creating beauty so rare and profound it stops people in their tracks.' },
+  red_panda: { name: 'Red Panda', emoji: '🦊', rare: true, match: 91, traits: { leadership: 58, loyalty: 88, courage: 65, intelligence: 85, creativity: 96, adaptability: 90, empathy: 92, curiosity: 97, social: 72, independence: 80 }, desc: "You carry the spirit of the Red Panda — one of nature's most charming, curious, and creative souls. You find magic in tiny details that others rush past. Your mind is a garden of wonder, constantly growing new ideas. Gentle, quirky, and intensely creative — you see the world as a playground of infinite possibilities.", fact: "🌿 Red pandas use their bushy tails as blankets in cold weather — you wrap everyone you love in warmth.", strengths: ['Infectious creativity','Wonder-filled curiosity','Deep warmth','Unique perspective'], weaknesses: ['Avoids big crowds','Self-doubt','Underestimates self'], social: 'Warm wanderer — loving in small groups, energized by cozy one-on-one moments.', talent: 'Turning ordinary moments into magical, unforgettable memories.' },
+  panther: { name: 'The Panther', emoji: '🐈‍⬛', rare: true, match: 95, traits: { leadership: 86, loyalty: 80, courage: 95, intelligence: 92, creativity: 88, adaptability: 90, empathy: 78, curiosity: 85, social: 52, independence: 96 }, desc: "You carry the spirit of the Black Panther — the ultimate symbol of power, mystery, and untamed grace. You operate in the shadows not from weakness but from strategy. Your silence is deafening, your presence electrifying. When you finally reveal your true self, people are completely undone by what they discover.", fact: "🐈‍⬛ Black panthers are melanistic leopards — same animal, different expression. Your darkness is a gift.", strengths: ['Magnetic mystery','Fierce courage','Strategic silence','Protective power'], weaknesses: ['Too guarded','Intimidating to others','Can isolate self'], social: 'Shadow sovereign — few see the real you, but those who do are changed forever.', talent: 'Transforming pain into formidable, beautiful power.' },
+  orca: { name: 'The Orca', emoji: '🐋', rare: true, match: 93, traits: { leadership: 95, loyalty: 96, courage: 90, intelligence: 97, creativity: 85, adaptability: 88, empathy: 90, curiosity: 88, social: 95, independence: 70 }, desc: "You are the Orca — the apex of intelligence, social sophistication, and collective power. You are the kind of leader who makes the entire group exponentially stronger. Your intelligence is multi-layered — emotional, strategic, and creative all at once. You build empires not alone, but through the force of your extraordinary community.", fact: "🐋 Orcas have culture — different pods speak different dialects and pass traditions across generations. You are a civilization unto yourself.", strengths: ['Apex intelligence','Pod leadership','Strategic master','Cultural creator'], weaknesses: ['Needs worthy pack','Underestimated by outsiders','Complex to know'], social: 'Pod commander — you build legendary inner circles of intense loyalty and capability.', talent: 'Building movements and communities that outlast any individual.' }
+};
+
+const QUESTIONS = [
+  { emoji: '🌅', trait: 'leadership', text: 'Your friend group is planning a trip but no one is taking charge. What do you naturally do?', options: [ { e: '👑', t: 'Step up immediately — I already have a plan forming', score: { leadership: 10, courage: 8 } }, { e: '🗺️', t: 'Quietly suggest a destination and see who agrees', score: { intelligence: 9, adaptability: 8 } }, { e: '💬', t: 'Ask everyone what they want and help them find consensus', score: { empathy: 10, social: 9 } }, { e: '✈️', t: 'Let others plan — I\'ll make it fun when we get there', score: { independence: 10, creativity: 8 } } ] },
+  { emoji: '🌿', trait: 'environment', text: 'Your perfect soul-recharging environment is...', options: [ { e: '🏔️', t: 'Alone in misty mountains — pure silence and vast space', score: { independence: 10, adaptability: 9 } }, { e: '🌊', t: 'By the ocean with people I love and love me back', score: { social: 10, empathy: 9 } }, { e: '🌲', t: 'Deep in a forest — just me, wildlife, and ancient trees', score: { curiosity: 10, intelligence: 8 } }, { e: '🏙️', t: 'In the buzz of a city, exploring hidden gems', score: { creativity: 10, adaptability: 9 } } ] },
+  { emoji: '⚔️', trait: 'courage', text: 'You discover a massive injustice happening to someone weaker. Your move?', options: [ { e: '🔥', t: 'Confront it immediately, consequences be damned', score: { courage: 10, leadership: 9 } }, { e: '🧠', t: 'Gather facts and build an airtight case first', score: { intelligence: 10, curiosity: 8 } }, { e: '🤝', t: 'Rally allies to create collective pressure', score: { social: 10, loyalty: 9 } }, { e: '🎯', t: 'Find the most strategic, effective intervention', score: { intelligence: 9, adaptability: 9 } } ] },
+  { emoji: '💔', trait: 'loyalty', text: 'A close friend made a terrible mistake that hurt you deeply. You...', options: [ { e: '❤️', t: 'Forgive completely — they need me more than ever', score: { loyalty: 10, empathy: 10 } }, { e: '🗣️', t: 'Have a hard, honest conversation and rebuild together', score: { courage: 9, social: 9 } }, { e: '⏳', t: 'Give them space while processing your own feelings', score: { independence: 9, intelligence: 8 } }, { e: '🚪', t: 'Protect your energy — some wounds end friendships', score: { independence: 10, adaptability: 9 } } ] },
+  { emoji: '🎨', trait: 'creativity', text: 'When you\'re given complete creative freedom, you tend to...', options: [ { e: '🌌', t: 'Go completely wild — the stranger and bolder the better', score: { creativity: 10, curiosity: 9 } }, { e: '📐', t: 'Start with a clear vision and execute it perfectly', score: { intelligence: 10, leadership: 8 } }, { e: '💭', t: 'Research deeply, then create something deeply meaningful', score: { curiosity: 10, intelligence: 8 } }, { e: '🎭', t: 'Collaborate and build on what others inspire in you', score: { social: 10, empathy: 8 } } ] },
+  { emoji: '🌪️', trait: 'adaptability', text: 'Everything in your life suddenly changes overnight — job, city, relationships. You...', options: [ { e: '🌊', t: 'Flow with it — change is just life evolving', score: { adaptability: 10, independence: 9 } }, { e: '🏗️', t: 'Immediately start rebuilding a new structure', score: { leadership: 10, courage: 9 } }, { e: '💞', t: 'Lean on your people — you never face chaos alone', score: { social: 10, loyalty: 9 } }, { e: '🔍', t: 'Analyze what happened and extract the lesson', score: { intelligence: 10, curiosity: 9 } } ] },
+  { emoji: '🧠', trait: 'intelligence', text: 'How does your mind work when solving a tough problem?', options: [ { e: '⚡', t: 'Instinct-first — I trust my gut completely', score: { courage: 10, adaptability: 9 } }, { e: '🗂️', t: 'Systematic analysis — I map every variable methodically', score: { intelligence: 10, curiosity: 9 } }, { e: '💡', t: 'Creative leaps — I find sideways solutions no one considered', score: { creativity: 10, intelligence: 8 } }, { e: '🤲', t: 'Collective wisdom — other minds make me sharper', score: { social: 10, empathy: 8 } } ] },
+  { emoji: '💫', trait: 'social', text: 'How do you truly feel after a big, loud social event?', options: [ { e: '⚡', t: 'Electrified — I came alive and want more', score: { social: 10, leadership: 8 } }, { e: '😌', t: 'Content but ready for quiet — I got what I needed', score: { adaptability: 9, empathy: 8 } }, { e: '🛋️', t: 'Drained — I need days of solitude to recover fully', score: { independence: 10, intelligence: 8 } }, { e: '🤔', t: 'Analyzing every conversation — was I truly myself?', score: { curiosity: 10, intelligence: 9 } } ] },
+  { emoji: '🔥', trait: 'independence', text: 'What is your deepest, truest relationship with freedom?', options: [ { e: '🦅', t: 'Absolute non-negotiable — I\'d sacrifice almost anything for it', score: { independence: 10, courage: 9 } }, { e: '🌱', t: 'Beautiful, but I freely choose to weave my life with others', score: { loyalty: 10, empathy: 9 } }, { e: '⚖️', t: 'Balance — I need both solitude and deep connection', score: { intelligence: 9, adaptability: 9 } }, { e: '🎯', t: 'Freedom to pursue my purpose — that\'s all that matters', score: { leadership: 10, courage: 8 } } ] },
+  { emoji: '✨', trait: 'final', text: 'Finally — what do you believe is your greatest gift to this world?', options: [ { e: '🛡️', t: 'Protecting and fighting for those who cannot protect themselves', score: { courage: 10, loyalty: 9, leadership: 8 } }, { e: '💡', t: 'The ideas, beauty, and creativity I bring into existence', score: { creativity: 10, curiosity: 9, intelligence: 8 } }, { e: '❤️', t: 'The love, safety, and belonging I create around me', score: { empathy: 10, social: 9, loyalty: 8 } }, { e: '🌍', t: 'Showing what\'s possible — being the proof of life', score: { independence: 10, courage: 9, adaptability: 8 } } ] }
+];
+
+const WISDOMS = [
+  '"The wolf does not perform for the sheep." — Ancient Proverb',
+  '"The eagle that does not fly would rather be an eagle than a chicken." — Wild Wisdom',
+  '"In every walk with nature, one receives far more than they seek." — John Muir',
+  '"The tiger does not proclaim his tigritude — he pounces." — Wole Soyinka',
+  '"Adapt like water — take the shape of any vessel yet remain essentially yourself."',
+  '"The snow leopard is master of a terrain that kills most others." — Wildlife Code',
+  '"Dolphins do not swim to arrive — they swim for the joy of swimming." — Ocean Wisdom'
+];
+
+let currentQ = 0, scores = {}, answers = [];
+
+function init() {
+  // Particles
+  const pc = document.getElementById('particles');
+  const colors = ['#ff6b00','#ff0080','#8b00ff','#00d4ff','#00ff88','#ffff00','#ff4444'];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 6 + 2;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*15+8}s;animation-delay:${Math.random()*10}s`;
+    pc.appendChild(p);
+  }
+
+  // Carousel
+  const animals = [['🐺','Wolf'],['🦁','Lion'],['🦊','Fox'],['🦉','Owl'],['🦅','Eagle'],['🐯','Tiger'],['🐬','Dolphin'],['🐘','Elephant'],['🐆','Snow Leopard'],['🦊','Red Panda'],['🐈‍⬛','Panther'],['🐋','Orca'],['🐼','Panda'],['🦁','White Tiger'],['🦅','Golden Eagle']];
+  const doubles = [...animals, ...animals];
+  const carouselEl = document.getElementById('carousel');
+  doubles.forEach(([e, n]) => {
+    const chip = document.createElement('div');
+    chip.className = 'animal-chip';
+    chip.innerHTML = `<span>${e}</span> ${n}`;
+    carouselEl.appendChild(chip);
+  });
+
+  document.getElementById('dailyWisdom').textContent = WISDOMS[new Date().getDay() % WISDOMS.length];
+
+  Object.keys(ANIMALS).forEach(k => {
+    scores[k] = 0;
+  });
+}
+
+function showPage(id) {
+  ['landingPage','quizPage','loadingPage','resultsPage'].forEach(p => {
+    document.getElementById(p).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  currentQ = 0;
+  answers = [];
+  Object.keys(ANIMALS).forEach(k => scores[k] = 0);
+  showPage('quizPage');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const pct = ((currentQ + 1) / QUESTIONS.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Question ${currentQ + 1} of ${QUESTIONS.length}`;
+
+  const html = `
+    <div class="q-card">
+      <div class="q-num">Question ${currentQ + 1}</div>
+      <div class="q-emoji">${q.emoji}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.options.map((o, i) => `
+        <div class="option" id="opt${i}" onclick="selectOption(${i})">
+          <div class="option-icon">${o.e}</div>
+          ${o.t}
+        </div>
+      `).join('')}
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${currentQ < QUESTIONS.length - 1 ? 'Next Question →' : '✨ Reveal My Spirit Animal'}
+      </button>
+    </div>
+  `;
+  document.getElementById('questionContainer').innerHTML = html;
+}
+
+function selectOption(idx) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('opt' + idx).classList.add('selected');
+  document.getElementById('nextBtn').classList.add('show');
+  answers[currentQ] = idx;
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === undefined) return;
+
+  // Score this answer
+  const q = QUESTIONS[currentQ];
+  const chosen = q.options[answers[currentQ]];
+  const animalKeys = Object.keys(ANIMALS);
+
+  animalKeys.forEach(ak => {
+    const a = ANIMALS[ak];
+    const traitScores = chosen.score;
+    const traitKeys = Object.keys(traitScores);
+    let contribution = 0;
+    traitKeys.forEach(tk => {
+      const animalTrait = a.traits[tk] || 0;
+      contribution += (animalTrait / 100) * traitScores[tk];
+    });
+    scores[ak] = (scores[ak] || 0) + contribution;
+  });
+
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  showPage('loadingPage');
+  const animalSeq = ['🦁','🐺','🦊','🦉','🐯','🐬','🐘','🦅','🐆','🐋'];
+  let ai = 0;
+  const anim = setInterval(() => {
+    const s = animalSeq.slice(ai, ai + 3).join('');
+    document.getElementById('loadingAnimals').textContent = s;
+    ai = (ai + 1) % (animalSeq.length - 2);
+  }, 400);
+
+  setTimeout(() => {
+    clearInterval(anim);
+    buildResults();
+    showPage('resultsPage');
+    setTimeout(animateTraits, 300);
+  }, 3000);
+}
+
+function buildResults() {
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const topKey = sorted[0][0];
+  const animal = ANIMALS[topKey];
+
+  document.getElementById('spiritEmoji').textContent = animal.emoji;
+  document.getElementById('spiritName').textContent = animal.name;
+  document.getElementById('matchBadge').textContent = animal.match + '% Soul Match';
+  document.getElementById('spiritDesc').textContent = animal.desc;
+  document.getElementById('spiritFact').textContent = animal.fact;
+  document.getElementById('rareBadge').style.display = animal.rare ? 'inline-flex' : 'none';
+
+  // Traits
+  const traitColors = {
+    leadership: 'linear-gradient(90deg,#ff6b00,#ff8c00)',
+    loyalty: 'linear-gradient(90deg,#ff0080,#ff66aa)',
+    courage: 'linear-gradient(90deg,#ff4444,#ff6b00)',
+    intelligence: 'linear-gradient(90deg,#8b00ff,#aa44ff)',
+    creativity: 'linear-gradient(90deg,#00d4ff,#0088ff)',
+    adaptability: 'linear-gradient(90deg,#00ff88,#00cc66)',
+    empathy: 'linear-gradient(90deg,#ff0080,#8b00ff)',
+    curiosity: 'linear-gradient(90deg,#ffff00,#ff8c00)',
+    social: 'linear-gradient(90deg,#00d4ff,#00ff88)',
+    independence: 'linear-gradient(90deg,#8b00ff,#ff0080)'
+  };
+  const traitLabels = { leadership:'Leadership',loyalty:'Loyalty',courage:'Courage',intelligence:'Intelligence',creativity:'Creativity',adaptability:'Adaptability',empathy:'Empathy',curiosity:'Curiosity',social:'Social Energy',independence:'Independence' };
+  let traitsHtml = '';
+  Object.entries(animal.traits).forEach(([k, v]) => {
+    traitsHtml += `<div class="trait-row">
+      <div class="trait-header"><span>${traitLabels[k]}</span><span>${v}%</span></div>
+      <div class="trait-bar-bg"><div class="trait-bar" id="tb_${k}" style="background:${traitColors[k]};width:0%"></div></div>
+    </div>`;
+  });
+  document.getElementById('traitsContainer').innerHTML = traitsHtml;
+
+  // Strengths/weaknesses
+  const strHtml = animal.strengths.map(s => `<span class="strength-tag">${s}</span>`).join('');
+  const wkHtml = animal.weaknesses.map(w => `<span class="weak-tag">${w}</span>`).join('');
+  document.getElementById('strengthsContent').innerHTML = strHtml;
+  document.getElementById('weaknessContent').innerHTML = wkHtml;
+  document.getElementById('socialContent').textContent = animal.social;
+  document.getElementById('talentContent').textContent = animal.talent;
+
+  // Badges
+  const badges = [
+    { icon: '🌟', name: 'Soul Seeker', earned: true },
+    { icon: '🐾', name: 'Wild Heart', earned: true },
+    { icon: animal.rare ? '💎' : '⭐', name: animal.rare ? 'Rare Spirit' : 'Spirit Found', earned: true },
+    { icon: '🔮', name: 'Mystic', earned: animal.match >= 92 }
+  ];
+  document.getElementById('badgesRow').innerHTML = badges.map(b => `
+    <div class="badge ${b.earned ? 'earned' : ''}">
+      <span class="badge-icon">${b.icon}</span>
+      <div class="badge-name">${b.name}</div>
+    </div>
+  `).join('');
+}
+
+function animateTraits() {
+  const topKey = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+  const animal = ANIMALS[topKey];
+  Object.entries(animal.traits).forEach(([k, v]) => {
+    const el = document.getElementById('tb_' + k);
+    if (el) setTimeout(() => { el.style.width = v + '%'; }, 100);
+  });
+}
+
+function shareResult(platform) {
+  const topKey = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+  const animal = ANIMALS[topKey];
+  const text = `I just discovered my spirit animal is ${animal.name} ${animal.emoji} with a ${animal.match}% soul match on Inner Wild Aura™! Discover yours 🐾✨`;
+  const url = 'https://innerwildaura.com';
+  const msgs = { instagram: '📷 Opening Instagram — paste your result!', whatsapp: '💬 Opening WhatsApp...', x: '✖️ Opening X...', facebook: '👍 Opening Facebook...' };
+  showToast(msgs[platform] || '✨ Link copied!');
+  if (platform === 'x') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + ' ' + url)}`);
+  else if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`);
+  else if (platform === 'facebook') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`);
+}
+
+function downloadCard() {
+  showToast('💾 Generating your card...');
+  const topKey = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+  const animal = ANIMALS[topKey];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500">
+    <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1a0038"/><stop offset="100%" style="stop-color:#000d1a"/></linearGradient>
+    <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#ff6b00"/><stop offset="50%" style="stop-color:#ff0080"/><stop offset="100%" style="stop-color:#8b00ff"/></linearGradient></defs>
+    <rect width="400" height="500" fill="url(#bg)" rx="20"/>
+    <rect y="0" width="400" height="4" fill="url(#tg)" rx="2"/>
+    <text x="200" y="60" text-anchor="middle" fill="#888" font-size="12" font-family="Arial" letter-spacing="3">INNER WILD AURA™</text>
+    <text x="200" y="200" text-anchor="middle" font-size="100">${animal.emoji}</text>
+    <text x="200" y="260" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold" font-family="Arial">${animal.name}</text>
+    <rect x="140" y="270" width="120" height="30" rx="15" fill="url(#tg)" opacity="0.3"/>
+    <text x="200" y="291" text-anchor="middle" fill="#00ff88" font-size="14" font-family="Arial" font-weight="bold">${animal.match}% Soul Match</text>
+    <text x="200" y="340" text-anchor="middle" fill="#aaa" font-size="11" font-family="Arial">Your Wild Soul Has Spoken</text>
+    <text x="200" y="480" text-anchor="middle" fill="#555" font-size="10" font-family="Arial">innerwildaura.com • Discover Yours ✨</text>
+  </svg>`;
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `inner-wild-aura-${topKey}.svg`;
+  a.click();
+  setTimeout(() => showToast('✅ Card downloaded!'), 800);
+}
+
+function retakeQuiz() { startQuiz(); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html>
